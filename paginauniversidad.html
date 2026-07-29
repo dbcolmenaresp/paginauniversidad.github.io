@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurso Educativo Universitario | Plataforma Académica</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --glass-bg: rgba(255, 255, 255, 0.07);
+            --glass-card: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-hover: rgba(255, 255, 255, 0.22);
+            
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #7f00ff;
+            --accent-green: #11998e;
+            --accent-emerald: #38ef7d;
+            
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.75);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            
+            --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --border-radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background Blobs */
+        .ambient-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: pulse 10s infinite alternate;
+        }
+        .blob-1 {
+            top: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: #00f2fe;
+        }
+        .blob-2 {
+            bottom: -150px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: #7f00ff;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(30px, -20px); }
+        }
+
+        /* Top Header Navigation Glass Bar */
+        header {
+            position: sticky;
+            top: 15px;
+            z-index: 1000;
+            width: 92%;
+            max-width: 1280px;
+            margin: 15px auto 0;
+            background: rgba(15, 25, 35, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #0f2027;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .brand-text h1 {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Navigation Pills */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        nav button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav button:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        nav button.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #0f2027;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Dropdown for Topics */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            left: 0;
+            background: rgba(15, 25, 35, 0.95);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 220px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow-glow);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: flex;
+        }
+
+        .dropdown-menu button {
+            width: 100%;
+            justify-content: flex-start;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        /* Main Glass Stage */
+        main {
+            width: 92%;
+            max-width: 1280px;
+            margin: 25px auto 40px;
+            flex: 1;
+        }
+
+        .page-content {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Glass Cards Layout */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 35px;
+            box-shadow: var(--shadow-glow);
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(79, 172, 254, 0.2));
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+        }
+
+        .section-title h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--glass-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            background: var(--glass-hover);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+
+        .info-card h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Educational Nodes Map (Visual Feature) */
+        .nodes-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px 10px;
+            position: relative;
+        }
+
+        .node-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            width: 200px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .node-box i {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+        }
+
+        .node-box h5 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        /* Topic Details Styling */
+        .topic-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(0, 242, 254, 0.15);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .module-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .module-list li {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .module-list li i {
+            color: var(--accent-emerald);
+        }
+
+        /* Futuristic Timeline Table for Schedule */
+        .timeline-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .timeline-table th {
+            padding: 12px 18px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-table tbody tr {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.005);
+        }
+
+        .timeline-table td {
+            padding: 16px 18px;
+            font-size: 0.95rem;
+        }
+
+        .timeline-table td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .timeline-table td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .weight-pill {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #0f2027;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        /* Contact Profile Glass Card */
+        .author-card {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .author-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 10px 25px rgba(127, 0, 255, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .author-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .author-info .role {
+            color: var(--accent-cyan);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .contact-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .contact-item i {
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 868px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                border-radius: 20px;
+                padding: 15px;
+            }
+            nav {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .timeline-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .author-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Glowing Background Elements -->
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+
+    <!-- Header Glass Navigation Bar -->
+    <header>
+        <a href="#" class="brand" onclick="showPage('inicio')">
+            <div class="brand-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="brand-text">
+                <h1>Universidad de Excelencia</h1>
+                <p>Facultad de Ingeniería & Sistemas</p>
+            </div>
+        </a>
+
+        <nav>
+            <button id="btn-inicio" class="active" onclick="showPage('inicio')">
+                <i class="fa-solid fa-university"></i> Institución
+            </button>
+            
+            <div class="dropdown">
+                <button id="btn-temas">
+                    <i class="fa-solid fa-book-open"></i> Contenidos <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button onclick="showPage('tema1')"><i class="fa-solid fa-chess"></i> Tema 1: Toma Decisiones</button>
+                    <button onclick="showPage('tema2')"><i class="fa-solid fa-sitemap"></i> Tema 2: Árboles Decision</button>
+                    <button onclick="showPage('tema3')"><i class="fa-solid fa-boxes-stacked"></i> Tema 3: Inventarios</button>
+                    <button onclick="showPage('tema4')"><i class="fa-solid fa-code"></i> Tema 4: Estructuras Lineales</button>
+                    <button onclick="showPage('tema5')"><i class="fa-solid fa-layer-group"></i> Tema 5: Pilas y Colas</button>
+                    <button onclick="showPage('tema6')"><i class="fa-solid fa-gamepad"></i> Tema 6: Teoría de Juegos</button>
+                </div>
+            </div>
+
+            <button id="btn-cronograma" onclick="showPage('cronograma')">
+                <i class="fa-solid fa-calendar-check"></i> Cronograma
+            </button>
+            <button id="btn-contacto" onclick="showPage('contacto')">
+                <i class="fa-solid fa-user-gear"></i> Contacto
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Dynamic Glass Container -->
+    <main>
+
+        <!-- PAGE 1: INSTITUTIONAL IDENTIFICATION -->
+        <section id="inicio" class="page-content active">
+            <div class="glass-panel">
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="section-title">
+                        <h2>Identificación Institucional</h2>
+                        <p>Portal Académico Universitario Oficial</p>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 25px;">
+                    <div class="info-card">
+                        <h4>Institución de Educación Superior</h4>
+                        <p>Universidad de Excelencia Académica</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Facultad / Departamento</h4>
+                        <p>Ingeniería de Sistemas y Computación</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Asignatura / Cátedra</h4>
+                        <p>Modelos Operativos y Estructuras de Datos</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Nivel Académico</h4>
+                        <p>Pregrado - Ciclo Profesional</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-cyan);">Ejes Fundamentales del Recurso Educativo</h3>
+                
+                <div class="nodes-container">
+                    <div class="node-box">
+                        <i class="fa-solid fa-brain"></i>
+                        <h5>Toma de Decisiones</h5>
+                    </div>
+                    <div class="node-box">
+                        <i class="fa-solid fa-diagram-project"></i>
+                        <h5>Modelación Cuantitativa</h5>
+                    </div>
+                    <div class="node-box">
+                        <i class="fa-solid fa-code-branch"></i>
+                        <h5>Estructuras de Datos</h5>
+                    </div>
+                    <div class="node-box">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <h5>Optimización</h5>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: TEMA 1 -->
+        <section id="tema1" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 01</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-chess"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 1: Fundamentos de Toma de Decisiones</h2>
+                        <p>Análisis en entornos de certeza, riesgo e incertidumbre</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Esta unidad introduce los conceptos fundamentales para modelar y resolver problemas complejos de toma de decisiones bajo diversos niveles de conocimiento e incertidumbre.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Clasificación de entornos de decisión y matrices de pagos.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Criterios cuantitativos: Valor Esperado, Laplace, Wald y Savage.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Análisis de sensibilidad y costo de la información perfecta.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 3: TEMA 2 -->
+        <section id="tema2" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 02</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-sitemap"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 2: Árboles de Decisión</h2>
+                        <p>Modelado secuencial y probabilidad de eventos</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Estudio gráfico e intuitivo de alternativas de decisión secuenciales mediante nodos de decisión y probabilidad.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Construcción topológica de árboles de decisión.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Algoritmo de inducción hacia atrás (Backward Induction).</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Integración de probabilidades a posteriori con Teorema de Bayes.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 4: TEMA 3 -->
+        <section id="tema3" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 03</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 3: Gestión de Inventarios</h2>
+                        <p>Modelos determinísticos y optimización de existencias</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Desarrollo de estrategias óptimas de reabastecimiento para minimizar costos de mantenimiento, pedido y escasez.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Modelo de Cantidad Económica de Pedido (EOQ estándar).</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Cálculo del Punto de Reorden (ROP) y Stock de Seguridad.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Descuentos por volumen y variabilidad en la demanda.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 5: TEMA 4 -->
+        <section id="tema4" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 04</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-code"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 4: Estructuras de Datos Lineales</h2>
+                        <p>Arreglos y listas enlazadas dinámicas</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Manejo fundamental de punteros y memoria dinámica para la organización de datos en la memoria del ordenador.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Arreglos contiguos vs. asignación dinámica de memoria.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Listas enlazadas simples, dobles y circulares.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Algoritmos de inserción, recorrido y eliminación de nodos.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 6: TEMA 5 -->
+        <section id="tema5" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 05</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 5: Pilas y Colas</h2>
+                        <p>Estructuras abstractas de acceso restringido (LIFO y FIFO)</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Modelado e implementación de estructuras dinámicas de datos para gestión de procesos y almacenamiento temporal.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Pilas (Stacks): Operaciones Push y Pop (LIFO).</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Colas (Queues) y Colas de Prioridad (FIFO).</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Aplicaciones prácticas: parseo de expresiones y buffer del sistema.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 7: TEMA 6 -->
+        <section id="tema6" class="page-content">
+            <div class="glass-panel">
+                <span class="topic-badge">Unidad Didáctica 06</span>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-gamepad"></i></div>
+                    <div class="section-title">
+                        <h2>Tema 6: Introducción a Teoría de Juegos</h2>
+                        <p>Modelado de interacción estratégica entre agentes</p>
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); line-height: 1.7;">
+                    Estudio de decisiones estratégicas interdependientes donde los resultados dependen de las acciones de múltiples participantes.
+                </p>
+                <ul class="module-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Juegos en forma normal y matrices de pago.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Concepto y cálculo del Equilibrio de Nash.</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Estrategias puras, mixtas y Dilema del Prisionero.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 8: SCHEDULE / CRONOGRAMA -->
+        <section id="cronograma" class="page-content">
+            <div class="glass-panel">
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                    <div class="section-title">
+                        <h2>Cronograma de Actividades & Evaluaciones</h2>
+                        <p>Planificación de entregas del período académico</p>
+                    </div>
+                </div>
+
+                <table class="timeline-table">
+                    <thead>
+                        <tr>
+                            <th>Unidad</th>
+                            <th>Actividad Evaluativa</th>
+                            <th>Ponderación</th>
+                            <th>Fecha Límite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tema 1</td>
+                            <td>Taller práctico de matrices de decisión</td>
+                            <td><span class="weight-pill">15%</span></td>
+                            <td>Semana 3 (18 Mar)</td>
+                        </tr>
+                        <tr>
+                            <td>Tema 2</td>
+                            <td>Estudio de caso: Árboles de decisión</td>
+                            <td><span class="weight-pill">15%</span></td>
+                            <td>Semana 5 (01 Abr)</td>
+                        </tr>
+                        <tr>
+                            <td>Tema 3</td>
+                            <td>Examen Parcial - Modelos de Inventario</td>
+                            <td><span class="weight-pill">20%</span></td>
+                            <td>Semana 8 (22 Abr)</td>
+                        </tr>
+                        <tr>
+                            <td>Temas 4-5</td>
+                            <td>Proyecto de Programación (Estructuras Dinámicas)</td>
+                            <td><span class="weight-pill">25%</span></td>
+                            <td>Semana 12 (20 May)</td>
+                        </tr>
+                        <tr>
+                            <td>Tema 6</td>
+                            <td>Ensayo analítico de Teoría de Juegos</td>
+                            <td><span class="weight-pill">10%</span></td>
+                            <td>Semana 14 (03 Jun)</td>
+                        </tr>
+                        <tr>
+                            <td>General</td>
+                            <td>Evaluación Final Integradora</td>
+                            <td><span class="weight-pill">15%</span></td>
+                            <td>Semana 16 (17 Jun)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PAGE 9: AUTHOR / CONTACT INFO -->
+        <section id="contacto" class="page-content">
+            <div class="glass-panel">
+                <div class="section-header">
+                    <div class="section-icon"><i class="fa-solid fa-id-card"></i></div>
+                    <div class="section-title">
+                        <h2>Información del Autor</h2>
+                        <p>Perfil Docente & Canales de Contacto</p>
+                    </div>
+                </div>
+
+                <div class="author-card">
+                    <div class="author-avatar">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="author-info">
+                        <h3>Profesor Catedrático</h3>
+                        <div class="role">Docente de Ingeniería de Sistemas</div>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">
+                            Especialista en Investigación de Operaciones, Toma de Decisiones y Desarrollo de Algoritmos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>docente@universidad.edu</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Lun - Miér: 14:00 - 16:00 hrs</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Edificio A, Cubículo 204</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+58 (276) 350-0000</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Plataforma Educativa Universitaria. Diseñado con tecnología Glassmorphism HTML5.</p>
+    </footer>
+
+    <!-- Interactive Navigation Script -->
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Remove active states from buttons
+            const buttons = document.querySelectorAll('nav button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Highlight button
+            if (pageId === 'inicio') {
+                document.getElementById('btn-inicio').classList.add('active');
+            } else if (pageId.startsWith('tema')) {
+                document.getElementById('btn-temas').classList.add('active');
+            } else if (document.getElementById('btn-' + pageId)) {
+                document.getElementById('btn-' + pageId).classList.add('active');
+            }
+            
+            // Scroll smoothly to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
